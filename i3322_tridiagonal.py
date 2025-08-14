@@ -85,15 +85,15 @@ def make_initial_c(n):
     return np.array([1] + ([0.9] * (n // 2)) + ([-0.9] * (n // 2)) + [-1])
 
 
-def main(start, end, tol, force_symmetry, warm_start, write_path):
+def main(start, end, tol, force_symmetry, warm_start, out_dir):
     soln = Solution(n=start, l=None, c=make_initial_c(start)).optimize(
         tol, force_symmetry
     )
     prev_value = soln.value()
 
     while end is None or soln.n <= end:
-        if write_path:
-            soln.write(os.path.join(write_path, f"{soln.n}.m"))
+        if out_dir:
+            soln.write(os.path.join(out_dir, f"{soln.n}.m"))
         if warm_start:
             soln = soln.extend()
         else:
@@ -114,7 +114,7 @@ if __name__ == "__main__":
     parser.add_argument("--tol", type=float, default=1e-20)
     parser.add_argument("--force_symmetry", type=bool, default=False)
     parser.add_argument("--warm_start", type=bool, default=True)
-    parser.add_argument("--write_path", type=str, default=None)
+    parser.add_argument("--out_dir", type=str, default=None)
     args = parser.parse_args()
 
     main(**vars(args))
